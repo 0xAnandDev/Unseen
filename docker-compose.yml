@@ -1,0 +1,21 @@
+# Week 1: just the database. The API runs on your machine with `cargo run`.
+# Later weeks add Redis, the worker, the mock platform and the website here.
+services:
+  db:
+    image: postgres:16            # needs version 14+ for bit_count()
+    container_name: unseen-db
+    environment:
+      POSTGRES_USER: unseen
+      POSTGRES_PASSWORD: unseen   # local development only
+      POSTGRES_DB: unseen
+    ports:
+      - "5433:5432"   # 5433 on your PC, so it never clashes with a Postgres installed on Windows
+    volumes:
+      - pgdata:/var/lib/postgresql/data   # keeps data when the container restarts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U unseen"]
+      interval: 5s
+      retries: 10
+
+volumes:
+  pgdata:
